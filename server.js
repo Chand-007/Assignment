@@ -6,6 +6,7 @@ var count = 1
 var savedResponse = []
 var schema ={}
 
+
 app.post('/identify',(req,res)=>{
 
     const givenNumber = req.body.phoneNumber
@@ -46,6 +47,7 @@ app.post('/identify',(req,res)=>{
         
     }
     else{
+
         schema = {
             "id":count++,
             "phoneNumber":req.body.phoneNumber,
@@ -58,14 +60,41 @@ app.post('/identify',(req,res)=>{
         }
     
         savedResponse.push(schema)
+
     }
 
-    
-    console.log(schema)
-    res.status(200).json(output)
+    const CommonPhoneNumber = savedResponse.filter((item)=>item.phoneNumber.includes(givenNumber) || item.email.includes(givenEmail))
 
-    console.log("Saved Response at the end of request is::",savedResponse)
+    const primaryIds = []
+    const secondaryIds = []
+    const emails= []
+    const phoneN = []
+
+    for (const item of CommonPhoneNumber){
+        if(item.linkPrecedence === "primary"){
+            primaryIds.push(item.id)
+            emails.push(item.email)
+            phoneN.push(item.phoneNumber)
+        }
+        else if (item.linkPrecedence === "secondary"){
+            secondaryIds.push(item.id)
+            emails.push(item.email)
+            phoneN.push(item.phoneNumber)
+        }
+    }
+
+    const output = {
+        "contact":{
+            "primaryContactId":primaryIds[0],
+            "emails":[... new Set(emails)],
+            "phoneNumbers":[... new Set(phoneN)],
+            "secondaryContactIds":secondaryIds
+        }
+    }
+    res.status(200).json(output)
 })
+
+
 
 
 
