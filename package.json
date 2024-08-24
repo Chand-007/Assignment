@@ -1,6 +1,7 @@
 {
     "dependencies": {
       "express": "^4.19.2",
+      "mysql2": "^3.11.0",
       "nodemon": "^3.1.4"
     },
     "name": "assignmentproject",
@@ -9,7 +10,8 @@
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
       "start": "node server.js",
-      "serve": "nodemon server.js"
+      "serve": "nodemon server.js",
+      "dev": "nodemon systemCheck.js"
     },
     "keywords": [],
     "author": "",
